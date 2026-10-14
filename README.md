@@ -2,25 +2,25 @@
 
 A cozy little friend tracker for **Animal Crossing: New Horizons**. No installs, no server, no accounts — just open it in your browser.
 
+## 🌐 Live site
+
+**https://beef-erikson.github.io/acnh-friend-tracker/**
+
+On iPhone: open that link in Safari → **Share → Add to Home Screen** — it installs as a full-screen app with its own leaf icon and works offline once loaded.
+
 ## How to use
 
 Double-click `index.html` (any modern browser — Chrome, Safari, Edge, Firefox).
 
 ## 📱 Use it on your iPhone
 
-**Option A — Anywhere (best): host it online for free with GitHub Pages**
+**Done — it's hosted!** Open **https://beef-erikson.github.io/acnh-friend-tracker/** in iPhone Safari, then tap **Share → Add to Home Screen** for an app icon. It opens full-screen and keeps working offline (images cache automatically as you browse).
 
-1. Create a GitHub repository and upload this whole folder (34 MB, all 413 photos included), then enable **Settings → Pages → Deploy from branch (main)**.
-2. Open `https://<your-name>.github.io/<repo>/` in iPhone Safari.
-3. Tap **Share → Add to Home Screen** — you get an app icon and it opens full-screen like a real app, with offline support (images cache automatically after first visit).
+**Moving progress between devices:** use **⬇️ Export my data** on one device (save the backup file to iCloud Drive or Files), then **⬆️ Import data** on the other. Your progress is stored per-device in the browser. iPhone tip: iOS can clear website data you haven't touched in a while, so export a backup every so often.
 
-**Option B — At home only: serve it from your Mac**
+**Updating the app:** this repo auto-deploys — push (or upload) changes to `main` on GitHub and the site updates in a minute or two.
 
-1. On your Mac, double-click **`Start iPhone Server.command`** (keep the window open).
-2. On your iPhone, connected to the same Wi-Fi, open Safari and go to the `http://192.168.x.x:8931` address it prints.
-3. Share → Add to Home Screen works here too (offline caching isn't available on plain `http://`).
-
-Either way, use **⬇️ Export my data** / **⬆️ Import data** to move your progress between your computer and phone (save the backup file to Files or iCloud Drive, then import it on the other device). iPhone tip: iOS can clear website data you haven't touched in a while, so export a backup every so often.
+**At home only, without GitHub:** double-click **`Start iPhone Server.command`** (keep the window open) and visit the printed `http://192.168.x.x:8931` address from iPhone Safari on the same Wi-Fi.
 
 
 - **🏝️ My Island** — track the villagers currently living on your island (up to 10, just like the game). Click a resident's card for their full profile, or "👋 Move out" when they leave. Residents you move out stay in your collection.
