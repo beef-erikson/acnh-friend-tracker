@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Island Friends · ACNH Villager Tracker</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍃</text></svg>">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#58b368">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Island Friends">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --leaf:#58b368; --leaf-dark:#3a8f4d; --leaf-deep:#2e7d3b;
+    --cream:#fffaf0; --paper:#fffdf7; --card:#fffef9;
+    --ink:#5b4a38; --ink-soft:#93816d; --ink-faint:#b5a793;
+    --sky-top:#a5e3f7; --sky-mid:#c9f0dd; --sky-bottom:#eef9d8;
+    --sun:#ffd166; --accent:#ff8fab; --badge:#4db35d;
+    --radius:22px;
+    --shadow:0 4px 14px rgba(90,120,60,.14);
+    --shadow-lift:0 10px 24px rgba(90,120,60,.22);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Nunito','Segoe UI Rounded','Hiragino Maru Gothic ProN',system-ui,sans-serif;
+    color:var(--ink);
+    background:#c9f0dd;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button, .v-card, .resident-card, select, input{ -webkit-tap-highlight-color:transparent; }
+  h1,h2,h3,.baloo{font-family:'Baloo 2','Nunito',system-ui,sans-serif;}
+
+  /* ---------- decorative background ---------- */
+  .sky{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+    background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 42%,var(--sky-bottom) 100%);}
+  .sky .cloud{position:absolute; font-size:64px; opacity:.55; filter:drop-shadow(0 4px 6px rgba(80,120,160,.15)); animation:drift 90s linear infinite;}
+  .sky .sun{position:absolute; top:-70px; right:-70px; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,#ffe29a 0%,#ffd166 55%,rgba(255,209,102,0) 72%); opacity:.75; animation:pulse 7s ease-in-out infinite;}
+  @keyframes drift{from{transform:translateX(-15vw);}to{transform:translateX(115vw);}}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+
+  .wrap{position:relative; z-index:1; max-width:1240px; margin:0 auto; padding:22px 18px 90px;}
+
+  /* ---------- header ---------- */
+  header{text-align:center; padding:12px 0 6px;}
+  .logo-row{display:flex; align-items:center; justify-content:center; gap:14px;}
+  .logo-leaf{font-size:44px; filter:drop-shadow(0 3px 4px rgba(60,110,60,.3)); animation:bob 4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-7px) rotate(4deg);}}
+  h1{font-size:clamp(30px,5vw,46px); color:#fff; letter-spacing:.5px;
+     text-shadow:0 3px 0 rgba(58,143,77,.55), 0 6px 16px rgba(50,100,60,.25); font-weight:800;}
+  .subtitle{color:#3f6d4f; font-weight:700; opacity:.85; margin-top:2px; font-size:15px;}
+
+  .stats-row{display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:18px 0 6px;}
+  .stat-chip{background:var(--paper); border-radius:999px; padding:8px 18px; font-weight:800; font-size:15px;
+    box-shadow:var(--shadow); border:2px solid rgba(88,179,104,.35); display:flex; align-items:center; gap:8px; transition:transform .15s;}
+  .stat-chip:hover{transform:translateY(-2px);}
+  .stat-chip .num{font-family:'Baloo 2',sans-serif; font-size:19px; color:var(--leaf-deep);}
+  .stat-chip small{font-weight:700; color:var(--ink-soft);}
+
+  /* island name */
+  .island-name-row{margin:14px auto 0; display:inline-flex; align-items:center; gap:8px; background:rgba(255,253,247,.9);
+    padding:7px 20px; border-radius:999px; box-shadow:var(--shadow); font-size:16px; font-weight:700; color:var(--ink-soft);}
+  .island-name-row .flag{font-size:22px;}
+  #islandName{font-family:'Baloo 2',sans-serif; font-size:20px; color:var(--leaf-deep); cursor:pointer; border-bottom:2px dashed rgba(88,179,104,.5); padding:0 4px;}
+  #islandName:hover{background:rgba(88,179,104,.12); border-radius:6px;}
+  .edit-hint{font-size:12px; color:var(--ink-faint);}
+
+  /* tabs */
+  .tabs{display:flex; justify-content:center; gap:14px; margin:26px 0 24px; flex-wrap:wrap;}
+  .tab-btn{font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700; padding:12px 30px; border-radius:999px;
+    border:3px solid var(--leaf-dark); background:var(--paper); color:var(--leaf-deep); cursor:pointer;
+    box-shadow:var(--shadow); transition:all .18s ease; display:flex; align-items:center; gap:10px;}
+  .tab-btn:hover{transform:translateY(-3px) rotate(-1deg); box-shadow:var(--shadow-lift);}
+  .tab-btn.active{background:linear-gradient(180deg,#6cc576,#4a9e58); color:#fff; border-color:#3a8f4d;
+    box-shadow:0 6px 16px rgba(58,143,77,.4), inset 0 -3px 0 rgba(0,0,0,.12);}
+  .tab-btn .count{background:rgba(255,255,255,.35); border-radius:999px; font-size:14px; padding:1px 10px;}
+  .tab-btn:not(.active) .count{background:rgba(88,179,104,.16); color:var(--leaf-deep);}
+
+  /* ---------- shared card bits ---------- */
+  .personality-dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:1px;}
+
+  section.view{display:none; animation:fadeIn .3s ease;}
+  section.view.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);}to{opacity:1; transform:none;}}
+
+  .section-title{font-size:24px; font-weight:800; color:#3f6d4f; margin:8px 2px 14px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .section-title .spacer{flex:1;}
+
+  /* ---------- island view ---------- */
+  .birthday-banner{background:linear-gradient(120deg,#fff3d6,#ffe3ec); border:3px solid #ffd166; border-radius:var(--radius);
+    padding:14px 22px; margin-bottom:20px; display:flex; align-items:center; gap:14px; font-weight:700; box-shadow:var(--shadow); flex-wrap:wrap;}
+  .birthday-banner .cake{font-size:34px; animation:bob 3s ease-in-out infinite;}
+  .birthday-banner b{color:#d4632a;}
+
+  .island-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:18px;}
+  .resident-card{background:var(--card); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease; position:relative; border:3px solid transparent;}
+  .resident-card:hover{transform:translateY(-5px) rotate(-.6deg); box-shadow:var(--shadow-lift); border-color:rgba(88,179,104,.5);}
+  .resident-card .photo-frame{padding:14px 14px 8px; display:flex; justify-content:center; background:
+    radial-gradient(circle at 50% 30%, #ffffff 0%, #f2fbf4 70%);}
+  .resident-card img.photo{width:100%; max-width:170px; aspect-ratio:1; object-fit:contain; border-radius:14px; background:#fff;
+    border:4px solid #fff; box-shadow:0 3px 10px rgba(90,120,60,.18);}
+  .name-plate{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:19px; text-align:center; padding:8px 10px 10px;
+    border-radius:0 0 18px 18px; letter-spacing:.3px;}
+  .resident-card .chips{display:flex; justify-content:center; gap:6px; flex-wrap:wrap; padding:0 10px 12px;}
+  .chip{background:#f4f0e6; border-radius:999px; font-size:12px; font-weight:800; padding:3px 10px; color:var(--ink-soft); white-space:nowrap;}
+  .chip.bday{background:#fff0f3; color:#c2506e;}
+  .move-out-btn{position:absolute; top:10px; right:10px; background:rgba(255,255,255,.92); border:2px solid #e7b6c2; color:#c2506e;
+    border-radius:999px; font-size:13px; font-weight:800; padding:5px 11px; cursor:pointer; opacity:0; transition:all .15s ease; box-shadow:var(--shadow);}
+  .resident-card:hover .move-out-btn{opacity:1;}
+  .move-out-btn:hover{background:#ffe3ea; transform:scale(1.08);}
+
+  .empty-state{text-align:center; padding:70px 20px; background:rgba(255,253,247,.8); border-radius:var(--radius); border:3px dashed rgba(88,179,104,.45);}
+  .empty-state .big{font-size:64px; margin-bottom:12px;}
+  .empty-state p{color:var(--ink-soft); font-weight:700; margin-bottom:18px;}
+  .btn{font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:700; padding:10px 24px; border-radius:999px; cursor:pointer;
+    border:3px solid var(--leaf-dark); background:linear-gradient(180deg,#6cc576,#4a9e58); color:#fff; box-shadow:var(--shadow); transition:all .15s ease;}
+  .btn:hover{transform:translateY(-2px); box-shadow:var(--shadow-lift);}
+  .btn.ghost{background:var(--paper); color:var(--leaf-deep);}
+  .btn.warm{border-color:#c2506e; background:linear-gradient(180deg,#ff9db5,#e86687); }
+
+  .composition{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .comp-chip{background:var(--paper); border-radius:999px; padding:6px 14px; font-size:13.5px; font-weight:800; box-shadow:var(--shadow);
+    border:2px solid; display:flex; align-items:center; gap:6px;}
+
+  /* ---------- all villagers view ---------- */
+  .toolbar{position:sticky; top:10px; z-index:20; background:rgba(255,253,247,.96); border-radius:var(--radius);
+    box-shadow:var(--shadow-lift); border:3px solid rgba(88,179,104,.3); padding:14px 16px; margin-bottom:20px;
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);}
+  .toolbar-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .search-box{flex:1; min-width:200px; display:flex; align-items:center; gap:8px; background:#fff; border-radius:999px;
+    padding:8px 16px; border:2.5px solid #d9e8c9; transition:border-color .15s;}
+  .search-box:focus-within{border-color:var(--leaf);}
+  .search-box input{border:none; outline:none; font-size:15.5px; font-family:inherit; font-weight:700; color:var(--ink); width:100%; background:transparent;}
+  .search-box .icon{font-size:17px;}
+  select{font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; color:var(--ink); background:#fff; border:2.5px solid #d9e8c9;
+    border-radius:999px; padding:8px 14px; cursor:pointer; outline:none; transition:border-color .15s;}
+  select:hover{border-color:var(--leaf);}
+  select:focus{border-color:var(--leaf);}
+  .progress-row{display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap;}
+  .progress-track{flex:1; min-width:180px; height:18px; background:#ece5d4; border-radius:999px; overflow:hidden; box-shadow:inset 0 2px 4px rgba(0,0,0,.08);}
+  .progress-fill{height:100%; width:0%; border-radius:999px; transition:width .5s cubic-bezier(.2,.8,.3,1);
+    background:repeating-linear-gradient(45deg,#6cc576 0 14px,#58b368 14px 28px); box-shadow:inset 0 -3px 0 rgba(0,0,0,.12);}
+  .progress-label{font-size:13.5px; font-weight:800; color:var(--ink-soft); white-space:nowrap;}
+  .progress-label b{color:var(--leaf-deep); font-size:15px;}
+
+  .villager-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(122px,1fr)); gap:13px;}
+  .v-card{background:var(--card); border-radius:18px; padding:10px 8px 9px; text-align:center; cursor:pointer; position:relative;
+    box-shadow:var(--shadow); border:2.5px solid transparent; transition:transform .15s ease, box-shadow .15s ease, border-color .15s;}
+  .v-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift); z-index:2;}
+  .v-card .accent{position:absolute; top:0; left:12%; right:12%; height:5px; border-radius:0 0 6px 6px;}
+  .v-card img.icon{width:72px; height:72px; object-fit:contain; margin-top:6px; transition:filter .25s, transform .15s;}
+  .v-card:hover img.icon{transform:scale(1.1);}
+  .v-card .vname{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14.5px; line-height:1.15; margin-top:3px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 4px;}
+  .v-card .vspecies{font-size:11px; font-weight:800; color:var(--ink-soft); margin-top:2px;}
+  .v-card.uncollected img.icon{filter:grayscale(.55) opacity(.62);}
+  .v-card.collected{border-color:#bfe8c4;}
+  .collected-badge{position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:50%; background:var(--badge);
+    border:2.5px solid #fff; color:#fff; font-size:14px; font-weight:900; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 6px rgba(40,120,50,.4); animation:pop .3s cubic-bezier(.2,1.6,.4,1);}
+  @keyframes pop{from{transform:scale(0);}to{transform:scale(1);}}
+  .island-flag{position:absolute; top:6px; left:6px; font-size:15px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.25)); animation:bob 3.4s ease-in-out infinite;}
+  .quick-add{position:absolute; bottom:38px; left:50%; transform:translateX(-50%) scale(.8); opacity:0; pointer-events:none;
+    background:linear-gradient(180deg,#6cc576,#4a9e58); color:#fff; border:2px solid #fff; border-radius:999px; font-size:12px;
+    font-weight:800; padding:4px 12px; transition:all .18s ease; box-shadow:var(--shadow); white-space:nowrap;}
+  .v-card:hover .quick-add{opacity:1; transform:translateX(-50%) scale(1); pointer-events:auto;}
+  .showing-count{color:var(--ink-soft); font-weight:800; font-size:13.5px;}
+
+  /* ---------- modal ---------- */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(46,74,52,.45); backdrop-filter:blur(4px); z-index:50;
+    display:none; align-items:flex-start; justify-content:center; padding:30px 14px; overflow-y:auto;}
+  .modal-backdrop.open{display:flex; animation:fadeIn .2s ease;}
+  .modal{background:var(--cream); border-radius:28px; max-width:860px; width:100%; box-shadow:0 24px 60px rgba(30,60,35,.4);
+    overflow:hidden; animation:popUp .25s cubic-bezier(.2,1.2,.4,1); margin:auto 0;}
+  @keyframes popUp{from{transform:scale(.92) translateY(16px); opacity:0;}to{transform:none; opacity:1;}}
+  .modal-head{display:flex; justify-content:space-between; align-items:center; padding:14px 18px 10px; gap:10px;}
+  .modal-title{font-family:'Baloo 2',sans-serif; font-size:21px; font-weight:800; color:var(--leaf-deep); display:flex; gap:8px; align-items:center;}
+  .close-btn{background:#fff; border:2.5px solid #e3d9c4; color:var(--ink-soft); width:38px; height:38px; border-radius:50%;
+    font-size:17px; cursor:pointer; transition:all .15s; font-weight:800; flex-shrink:0;}
+  .close-btn:hover{background:#ffe3ea; border-color:#e7b6c2; color:#c2506e; transform:rotate(90deg);}
+  .modal-body{display:grid; grid-template-columns:280px 1fr; gap:20px; padding:4px 22px 22px;}
+  .modal-left{display:flex; flex-direction:column; gap:14px; align-items:center;}
+  .modal-left img.mphoto{width:100%; max-width:250px; border-radius:18px; border:5px solid #fff; box-shadow:var(--shadow-lift); background:#fff;}
+  .house-box{width:100%; text-align:center;}
+  .house-box img{width:100%; border-radius:16px; border:4px solid #fff; box-shadow:var(--shadow);}
+  .house-box .cap{font-size:12.5px; font-weight:800; color:var(--ink-soft); margin-top:6px;}
+  .modal-right{min-width:0;}
+  .m-name-plate{display:inline-block; font-family:'Baloo 2',sans-serif; font-size:30px; font-weight:800; padding:6px 24px;
+    border-radius:16px 16px 16px 4px; margin-bottom:6px; letter-spacing:.5px;}
+  .m-catch{font-size:16.5px; font-style:italic; color:var(--ink-soft); font-weight:700; margin-bottom:14px;}
+  .m-catch::before{content:'“';} .m-catch::after{content:'”';}
+  .info-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px 14px;}
+  .info-item{background:#fff; border-radius:14px; padding:9px 13px; box-shadow:0 2px 6px rgba(90,120,60,.08);}
+  .info-item.wide{grid-column:1/-1;}
+  .info-item .lbl{font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-faint); margin-bottom:2px;}
+  .info-item .val{font-size:15px; font-weight:800; line-height:1.35;}
+  .info-item .sub{font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:2px; line-height:1.4;}
+  .swatch{display:inline-block; width:15px; height:15px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.25); vertical-align:-2px; margin-right:4px;}
+  .quote-box{background:#fdf6e4; border-left:5px solid var(--sun); border-radius:0 14px 14px 0; padding:10px 14px; font-style:italic;
+    font-weight:600; color:#7a6a50; font-size:14.5px; line-height:1.5;}
+  .furn-tags{display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;}
+  .furn-tag{background:#eef5e6; color:#4e7a44; border-radius:999px; font-size:11.5px; font-weight:800; padding:2.5px 9px;}
+  .modal-actions{display:flex; gap:12px; padding:16px 22px 20px; flex-wrap:wrap; border-top:2px dashed #e3d9c4; align-items:center;}
+  .modal-actions .spacer{flex:1;}
+  .version-tag{font-size:12.5px; font-weight:800; color:var(--ink-soft); background:#f4f0e6; padding:4px 12px; border-radius:999px;}
+
+  /* toast */
+  .toast-zone{position:fixed; bottom:26px; left:50%; transform:translateX(-50%); z-index:80; display:flex; flex-direction:column; gap:10px; align-items:center; width:min(94vw,480px);}
+  .toast{background:var(--paper); border-radius:18px; box-shadow:var(--shadow-lift); border:3px solid #bfe8c4; padding:12px 20px;
+    font-weight:800; font-size:15px; display:flex; gap:14px; align-items:center; animation:toastIn .3s cubic-bezier(.2,1.4,.4,1); max-width:100%;}
+  @keyframes toastIn{from{transform:translateY(30px) scale(.9); opacity:0;}to{transform:none; opacity:1;}}
+  .toast.leaving{transition:all .3s ease; opacity:0; transform:translateY(16px);}
+  .toast button{background:none; border:none; color:var(--leaf-deep); font-weight:900; font-size:14px; cursor:pointer; text-decoration:underline; font-family:inherit;}
+
+  /* footer */
+  footer{margin-top:44px; text-align:center; color:var(--ink-soft); font-size:13px; font-weight:700; opacity:.85;}
+  footer .foot-row{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:10px;}
+  .foot-btn{background:var(--paper); border:2px solid #e3d9c4; color:var(--ink-soft); border-radius:999px; padding:6px 14px;
+    font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit; box-shadow:var(--shadow); transition:all .15s;}
+  .foot-btn:hover{border-color:var(--leaf); color:var(--leaf-deep); transform:translateY(-2px);}
+
+  @media (max-width:720px){
+    .modal-body{grid-template-columns:1fr;}
+    .modal-left{flex-direction:column; align-items:center;}
+    .modal-left img.mphoto{max-width:220px;}
+    .info-grid{grid-template-columns:1fr;}
+    .villager-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));}
+    .search-box input{font-size:16px;} /* 16px prevents iOS auto-zoom on focus */
+    h1{font-size:34px;}
+    .wrap{padding:14px 12px 70px;}
+  }
+
+  /* ---------- touch devices (iPhone / iPad): no hover state ---------- */
+  @media (hover:none), (hover:on-demand){
+    /* move-out button is always visible on resident cards (no hover to reveal it) */
+    .resident-card .move-out-btn{opacity:1; padding:7px 14px; font-size:14px;}
+    /* invite via the card detail modal instead of the hover quick-add */
+    .v-card .quick-add{display:none;}
+    .close-btn{width:44px; height:44px;}
+    .tab-btn{padding:14px 26px;}
+    select{padding:11px 14px;}
+    .stat-chip{padding:10px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="sky" aria-hidden="true">
+  <div class="sun"></div>
+  <div class="cloud" style="top:8%; animation-duration:110s;">☁️</div>
+  <div class="cloud" style="top:22%; animation-duration:140s; animation-delay:-60s; font-size:44px; opacity:.4;">☁️</div>
+  <div class="cloud" style="top:55%; animation-duration:170s; animation-delay:-100s; font-size:56px; opacity:.3;">🎈</div>
+  <div class="cloud" style="top:75%; animation-duration:130s; animation-delay:-30s; font-size:48px; opacity:.28;">🦋</div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="logo-row"><span class="logo-leaf">🍃</span><h1>Island Friends</h1><span class="logo-leaf" style="animation-delay:-2s;">🌴</span></div>
+    <p class="subtitle">Animal Crossing: New Horizons — Villager Tracker</p>
+    <div class="stats-row">
+      <div class="stat-chip" title="Villagers currently living on your island">🏝️ Island <span class="num" id="statIsland">0/10</span></div>
+      <div class="stat-chip" title="Villagers you've ever collected">✅ Collection <span class="num" id="statCollected">0/413</span> <small id="statPercent">0%</small></div>
+    </div>
+    <div class="island-name-row">
+      <span class="flag">🏝️</span> Welcome to <span id="islandName" title="Click to rename your island!">My Island</span>
+      <span class="edit-hint">(click to rename)</span>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" id="tabIsland">🏝️ My Island <span class="count" id="tabIslandCount">0</span></button>
+      <button class="tab-btn" id="tabAll">📖 All Villagers <span class="count" id="tabAllCount">413</span></button>
+    </nav>
+  </header>
+
+  <!-- ============ ISLAND VIEW ============ -->
+  <section class="view active" id="viewIsland">
+    <div id="birthdayBanner"></div>
+    <h2 class="section-title">🐶 Residents <span class="spacer"></span><span class="showing-count" id="islandCompositionLead"></span></h2>
+    <div class="island-grid" id="islandGrid"></div>
+    <div id="islandEmpty" class="empty-state" style="display:none;">
+      <div class="big">⛺</div>
+      <h3 style="font-size:22px; margin-bottom:6px;">Your island is looking quiet…</h3>
+      <p>No villagers have moved in yet! Head to the All Villagers list to start inviting friends.</p>
+      <button class="btn" id="emptyGoAll">📖 Browse Villagers</button>
+    </div>
+    <div class="composition" id="compositionRow"></div>
+  </section>
+
+  <!-- ============ ALL VILLAGERS VIEW ============ -->
+  <section class="view" id="viewAll">
+    <div class="toolbar">
+      <div class="toolbar-row">
+        <label class="search-box"><span class="icon">🔍</span>
+          <input id="searchInput" type="text" placeholder="Search villagers… (press /)" autocomplete="off">
+        </label>
+        <select id="speciesFilter" aria-label="Filter by species"><option value="all">🐼 All Species</option></select>
+        <select id="personalityFilter" aria-label="Filter by personality"><option value="all">😊 All Personalities</option></select>
+        <select id="statusFilter" aria-label="Filter by collection status">
+          <option value="all">🌈 All Status</option>
+          <option value="collected">✅ Collected</option>
+          <option value="uncollected">⬜ Not Collected</option>
+          <option value="island">🏝️ On My Island</option>
+        </select>
+        <select id="sortSelect" aria-label="Sort villagers">
+          <option value="name">🔤 Name A–Z</option>
+          <option value="species">🐼 Species</option>
+          <option value="personality">😊 Personality</option>
+          <option value="birthday">🎂 Birthday</option>
+          <option value="version">🆕 Newest First</option>
+        </select>
+      </div>
+      <div class="progress-row">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-label"><b id="progressText">0 / 413</b> villagers collected · <span id="progressPercent">0%</span></div>
+      </div>
+    </div>
+    <h2 class="section-title">📖 Villager Collection <span class="spacer"></span><span class="showing-count" id="showingCount"></span></h2>
+    <div class="villager-grid" id="villagerGrid"></div>
+  </section>
+
+  <footer>
+    <div>Unofficial fan tool · Data &amp; images from the community NH spreadsheet dataset · Not affiliated with Nintendo</div>
+    <div class="foot-row">
+      <button class="foot-btn" id="exportBtn">⬇️ Export my data</button>
+      <button class="foot-btn" id="importBtn">⬆️ Import data</button>
+      <input type="file" id="importFile" accept=".json" style="display:none;">
+    </div>
+  </footer>
+</div>
+
+<!-- ============ DETAIL MODAL ============ -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+    <div class="modal-head">
+      <div class="modal-title">🪧 Villager Card</div>
+      <button class="close-btn" id="modalClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-left">
+        <img class="mphoto" id="mPhoto" alt="" loading="lazy">
+        <div class="house-box" id="mHouseBox">
+          <img id="mHouse" alt="Villager house interior" loading="lazy">
+          <div class="cap">🏠 Inside their home</div>
+        </div>
+      </div>
+      <div class="modal-right">
+        <div class="m-name-plate" id="mNamePlate"></div>
+        <div class="m-catch" id="mCatch"></div>
+        <div class="info-grid" id="mInfo"></div>
+        <div style="margin-top:12px;" class="quote-box" id="mQuote"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="mIslandBtn"></button>
+      <button class="btn ghost" id="mCollectBtn"></button>
+      <span class="spacer"></span>
+      <span class="version-tag" id="mVersion"></span>
+    </div>
+  </div>
+</div>
+
+<div class="toast-zone" id="toastZone"></div>
+
+<script src="data.js"></script>
+<script>
+/* ================= constants & metadata ================= */
+const MAX_ISLAND = 10;
+const LS_KEY = 'acnhTracker.v1';
+
+const P_META = {
+  'Lazy':       {emoji:'😴', color:'#74b816', desc:'Easygoing snack-lovers who enjoy naps, fossils, and chill vibes.'},
+  'Peppy':      {emoji:'💫', color:'#f783ae', desc:'Bubbly, energetic, and always excited to chat, sing, and dream big.'},
+  'Normal':     {emoji:'🌼', color:'#f5b324', desc:'Sweet, kind, and caring — the gentle hearts of every island.'},
+  'Snooty':     {emoji:'💅', color:'#9775fa', desc:'Sophisticated and a little vain, but loyal friends once they warm up.'},
+  'Cranky':     {emoji:'🧢', color:'#7d8ea3', desc:'Grumpy-looking softies with a heart of gold under the gruff exterior.'},
+  'Jock':       {emoji:'💪', color:'#f76707', desc:'Fitness fanatics who never skip a workout — or a chance to talk about one.'},
+  'Smug':       {emoji:'😏', color:'#4dabf7', desc:'Charming, polite, and a touch mischievous — smooth-talkers of the island.'},
+  'Big Sister': {emoji:'🤗', color:'#d6336c', desc:'Tough but caring "one of the guys" types who look after everyone.'},
+};
+
+const SPECIES_EMOJI = {
+  'Bird':'🐦','Squirrel':'🐿️','Pig':'🐷','Gorilla':'🦍','Alligator':'🐊','Koala':'🐨','Eagle':'🦅',
+  'Anteater':'🐜','Bull':'🐂','Mouse':'🐭','Cat':'🐱','Horse':'🐴','Hamster':'🐹','Kangaroo':'🦘',
+  'Wolf':'🐺','Penguin':'🐧','Chicken':'🐔','Elephant':'🐘','Rhinoceros':'🦏','Sheep':'🐑','Deer':'🦌',
+  'Tiger':'🐯','Bear cub':'🐻','Dog':'🐶','Bear':'🐻','Hippo':'🦛','Duck':'🦆','Goat':'🐐','Ostrich':'🦩',
+  'Rabbit':'🐰','Lion':'🦁','Frog':'🐸','Octopus':'🐙','Monkey':'🐵','Cow':'🐄',
+};
+
+const COLOR_HEX = {
+  'Aqua':'#3abbc7','Beige':'#e8d9b8','Black':'#3b3b3b','Blue':'#4d7bf0','Brown':'#a0714f','Colorful':null,
+  'Gray':'#a3a9b3','Green':'#59b64e','Orange':'#ff9038','Pink':'#ff9fc2','Purple':'#a06bd6','Red':'#f0564a',
+  'White':'#f7f4ec','Yellow':'#ffd84d',
+};
+
+const VERSION_LABEL = {
+  '1.0.0':'🌿 Original villager (game launch)',
+  '1.9.0':'🎀 Sanrio collaboration (2021)',
+  '2.0.0':'🆕 Added in the 2.0 update (2021)',
+};
+
+const ZODIAC = [
+  ['Capricorn','♑',1,1,1,19],['Aquarius','♒',1,20,2,18],['Pisces','♓',2,19,3,20],
+  ['Aries','♈',3,21,4,19],['Taurus','♉',4,20,5,20],['Gemini','♊',5,21,6,20],
+  ['Cancer','♋',6,21,7,22],['Leo','♌',7,23,8,22],['Virgo','♍',8,23,9,22],
+  ['Libra','♎',9,23,10,22],['Scorpio','♏',10,23,11,21],['Sagittarius','♐',11,22,12,21],
+  ['Capricorn','♑',12,22,12,31,12,31],
+];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+/* ================= state ================= */
+const byId = Object.fromEntries(VILLAGERS.map(v => [v.id, v]));
+
+function loadState(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(LS_KEY));
+    if (raw && Array.isArray(raw.island) && Array.isArray(raw.collected)){
+      return {island: raw.island.filter(id => byId[id]), collected: new Set(raw.collected.filter(id => byId[id])),
+              islandName: typeof raw.islandName === 'string' ? raw.islandName : 'My Island'};
+    }
+  }catch(e){}
+  return {island: [], collected: new Set(), islandName: 'My Island'};
+}
+const state = loadState();
+function save(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      island: state.island, collected: [...state.collected], islandName: state.islandName
+    }));
+  }catch(e){}
+}
+
+/* ================= helpers ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function birthdayMD(v){
+  const [m, d] = v.birthday.split('/').map(Number);
+  return {m, d};
+}
+function fmtBirthday(v){
+  const {m, d} = birthdayMD(v);
+  return `${MONTHS[m-1]} ${d}${['st','nd','rd'][((d%100)-20)%10-1] || 'th'}`;
+}
+function nextBirthdayDays(v){
+  const {m, d} = birthdayMD(v);
+  const now = new Date(); now.setHours(0,0,0,0);
+  let b = new Date(now.getFullYear(), m-1, d);
+  if (b < now) b = new Date(now.getFullYear()+1, m-1, d);
+  return Math.round((b - now) / 864e5);
+}
+function zodiac(v){
+  const {m, d} = birthdayMD(v);
+  for (const [name, sym, m1, d1, m2, d2] of ZODIAC){
+    if ((m === m1 && d >= d1) || (m === m2 && d <= d2)) return {name, sym};
+  }
+  return {name:'', sym:''};
+}
+function colorSwatch(name){
+  if (name === 'Colorful'){
+    return `<span class="swatch" style="background:conic-gradient(red,orange,yellow,lime,cyan,blue,magenta,red);"></span>${esc(name)}`;
+  }
+  const hex = COLOR_HEX[name] || '#ccc';
+  return `<span class="swatch" style="background:${hex};"></span>${esc(name)}`;
+}
+function bdayCountdownHTML(v){
+  const n = nextBirthdayDays(v);
+  if (n === 0) return `<span class="chip bday">🎂 Birthday today!</span>`;
+  if (n <= 31) return `<span class="chip bday">🎂 in ${n} day${n===1?'':'s'}</span>`;
+  return '';
+}
+function toast(msg, undoFn){
+  const zone = $('#toastZone');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span>${msg}</span>` + (undoFn ? `<button>undo</button>` : '');
+  if (undoFn) el.querySelector('button').onclick = () => { undoFn(); el.remove(); };
+  zone.appendChild(el);
+  setTimeout(() => { el.classList.add('leaving'); setTimeout(() => el.remove(), 320); }, 4200);
+}
+
+/* ================= actions ================= */
+function addToIsland(id){
+  const v = byId[id];
+  if (state.island.includes(id)){ openModal(id); return; }
+  if (state.island.length >= MAX_ISLAND){
+    toast(`🏝️ Your island is full! (${MAX_ISLAND}/10 residents — someone has to move out first.)`);
+    return;
+  }
+  state.island.push(id);
+  const firstTime = !state.collected.has(id);
+  state.collected.add(id);
+  save(); renderAll();
+  toast(`${SPECIES_EMOJI[v.species] || '🎉'} <b>${esc(v.name)}</b> moved in! ${firstTime ? '✨ New to your collection!' : ''}`);
+}
+function removeFromIsland(id, {viaModal=false} = {}){
+  const v = byId[id];
+  const prev = [...state.island];
+  state.island = state.island.filter(x => x !== id);
+  save(); renderAll();
+  if (viaModal && modalOpenId === id) openModal(id);
+  toast(`👋 <b>${esc(v.name)}</b> moved out — still in your collection ✅`, () => {
+    state.island = prev; save(); renderAll();
+    toast(`↩️ <b>${esc(v.name)}</b> is back on the island!`);
+  });
+}
+function setCollected(id, on){
+  const v = byId[id];
+  if (on) state.collected.add(id); else state.collected.delete(id);
+  save(); renderAll();
+  if (modalOpenId === id) openModal(id);
+  toast(on ? `✅ <b>${esc(v.name)}</b> marked as collected!` : `⬜ <b>${esc(v.name)}</b> removed from collection.`);
+}
+
+/* ================= rendering ================= */
+function renderStats(){
+  const c = state.collected.size;
+  $('#statIsland').textContent = `${state.island.length}/${MAX_ISLAND}`;
+  $('#statCollected').textContent = `${c}/${VILLAGERS.length}`;
+  const pct = (c / VILLAGERS.length * 100);
+  $('#statPercent').textContent = (pct < 1 && c > 0 ? pct.toFixed(1) : Math.round(pct)) + '%';
+  $('#tabIslandCount').textContent = state.island.length;
+  $('#progressFill').style.width = pct + '%';
+  $('#progressText').textContent = `${c} / ${VILLAGERS.length}`;
+  $('#progressPercent').textContent = (pct < 1 && c > 0 ? pct.toFixed(1) : Math.round(pct)) + '%';
+}
+
+function renderBirthdayBanner(){
+  const box = $('#birthdayBanner');
+  const upcoming = state.island
+    .map(id => ({v: byId[id], n: nextBirthdayDays(byId[id])}))
+    .filter(x => x.n <= 30)
+    .sort((a,b) => a.n - b.n);
+  if (!upcoming.length){ box.innerHTML = ''; return; }
+  const {v, n} = upcoming[0];
+  const when = n === 0 ? 'TODAY! 🎉🎈' : `in ${n} day${n===1?'':'s'}`;
+  const others = upcoming.slice(1, 4).map(x => `${esc(x.v.name)} (${x.n}d)`).join(' · ');
+  box.innerHTML = `
+    <div class="birthday-banner">
+      <span class="cake">🎂</span>
+      <div>
+        <b>${esc(v.name)}</b>'s birthday is <b>${when}</b><span style="font-weight:700;"> (${fmtBirthday(v)} ${zodiac(v).sym})</span>
+        ${others ? `<div style="font-size:13px;color:var(--ink-soft);font-weight:700;margin-top:2px;">Also soon: ${others}</div>` : ''}
+      </div>
+      <span style="flex:1;"></span>
+      <button class="btn ghost" id="bdayCardBtn">🪧 View card</button>
+    </div>`;
+  $('#bdayCardBtn').onclick = () => openModal(v.id);
+}
+
+function residentCardHTML(v){
+  const p = P_META[v.personality] || {color:'#aaa'};
+  return `
+  <div class="resident-card" data-id="${v.id}" tabindex="0" role="button" aria-label="${esc(v.name)}">
+    <button class="move-out-btn" data-moveout="${v.id}" title="${esc(v.name)} moves out">👋 Move out</button>
+    <div class="photo-frame"><img class="photo" src="img/photo/${v.id}.png" alt="${esc(v.name)} photo" loading="lazy"></div>
+    <div class="name-plate" style="background:${v.bubbleColor}; color:${v.nameColor};">${esc(v.name)}</div>
+    <div class="chips">
+      <span class="chip">${SPECIES_EMOJI[v.species] || ''} ${esc(v.species)}</span>
+      <span class="chip" style="background:${p.color}22; color:${p.color}; border:1.5px solid ${p.color}55;">${p.emoji} ${esc(v.personality)}</span>
+      ${bdayCountdownHTML(v)}
+    </div>
+  </div>`;
+}
+
+function renderIsland(){
+  renderBirthdayBanner();
+  const grid = $('#islandGrid');
+  grid.innerHTML = state.island.map(id => residentCardHTML(byId[id])).join('');
+  $('#islandEmpty').style.display = state.island.length ? 'none' : 'block';
+
+  // composition chips
+  const comp = {};
+  state.island.forEach(id => {
+    const v = byId[id];
+    comp[v.personality] = comp[v.personality] || {n:0, species:{}};
+    comp[v.personality].n++;
+    comp[v.personality].species[v.species] = (comp[v.personality].species[v.species] || 0) + 1;
+  });
+  const row = $('#compositionRow');
+  row.innerHTML = Object.entries(comp).sort((a,b) => b[1].n - a[1].n).map(([p, o]) => {
+    const meta = P_META[p] || {color:'#aaa', emoji:''};
+    const speciesList = Object.entries(o.species).map(([s, n]) => `${SPECIES_EMOJI[s]||''}×${n}`).join(' ');
+    return `<span class="comp-chip" style="border-color:${meta.color}66; color:${meta.color};">
+      ${meta.emoji} ${esc(p)} ×${o.n} <span style="color:var(--ink-faint); font-size:11.5px;">${speciesList}</span></span>`;
+  }).join('');
+  $('#islandCompositionLead').textContent = state.island.length ? `${state.island.length} friend${state.island.length===1?'':'s'} living here` : '';
+}
+
+/* -------- all villagers grid -------- */
+const filters = {q:'', species:'all', personality:'all', status:'all', sort:'name'};
+
+function gridCardHTML(v){
+  const onIsland = state.island.includes(v.id);
+  const got = state.collected.has(v.id);
+  const p = P_META[v.personality] || {color:'#aaa'};
+  return `
+  <div class="v-card ${got ? 'collected' : 'uncollected'}" data-id="${v.id}" tabindex="0" role="button" aria-label="${esc(v.name)}${got?', collected':''}">
+    <div class="accent" style="background:${p.color};"></div>
+    ${got ? '<div class="collected-badge" title="Collected!">✓</div>' : ''}
+    ${onIsland ? '<div class="island-flag" title="On your island">🏝️</div>' : ''}
+    <img class="icon" src="img/icon/${v.id}.png" alt="${esc(v.name)}" loading="lazy" width="72" height="72">
+    <div class="vname" title="${esc(v.name)}">${esc(v.name)}</div>
+    <div class="vspecies">${SPECIES_EMOJI[v.species] || ''} ${esc(v.species)}</div>
+    ${!onIsland ? `<button class="quick-add" data-quickadd="${v.id}">＋ invite</button>` : ''}
+  </div>`;
+}
+
+function applyFilters(){
+  let list = VILLAGERS.filter(v => {
+    if (filters.species !== 'all' && v.species !== filters.species) return false;
+    if (filters.personality !== 'all' && v.personality !== filters.personality) return false;
+    if (filters.status === 'collected' && !state.collected.has(v.id)) return false;
+    if (filters.status === 'uncollected' && state.collected.has(v.id)) return false;
+    if (filters.status === 'island' && !state.island.includes(v.id)) return false;
+    if (filters.q){
+      const q = filters.q.toLowerCase();
+      const hay = `${v.name} ${v.species} ${v.personality} ${v.catchphrase} ${v.gender} ${v.hobby}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  const coll = [...state.collected];
+  switch (filters.sort){
+    case 'name': list.sort((a,b) => a.name.localeCompare(b.name)); break;
+    case 'species': list.sort((a,b) => a.species.localeCompare(b.species) || a.name.localeCompare(b.name)); break;
+    case 'personality': list.sort((a,b) => a.personality.localeCompare(b.personality) || a.name.localeCompare(b.name)); break;
+    case 'birthday': {
+      const k = v => { const {m,d} = birthdayMD(v); return m*100 + d; };
+      list.sort((a,b) => k(a) - k(b)); break;
+    }
+    case 'version': {
+      const vk = {'2.0.0':0, '1.9.0':1, '1.0.0':2};
+      list.sort((a,b) => vk[a.versionAdded] - vk[b.versionAdded] || a.name.localeCompare(b.name)); break;
+    }
+  }
+  return list;
+}
+
+function renderVillagerGrid(){
+  const list = applyFilters();
+  $('#villagerGrid').innerHTML = list.map(gridCardHTML).join('');
+  $('#showingCount').textContent =
+    `${list.length} shown · ${state.collected.size} ✓ of ${VILLAGERS.length}` +
+    (list.length ? '' : ' — try clearing filters');
+}
+
+function renderAll(){
+  renderStats();
+  renderIsland();
+  renderVillagerGrid();
+}
+
+/* ================= modal ================= */
+let modalOpenId = null;
+
+function infoRow(label, valueHTML, sub = '', wide = false){
+  if (!valueHTML) return '';
+  return `<div class="info-item${wide ? ' wide' : ''}">
+    <div class="lbl">${label}</div>
+    <div class="val">${valueHTML}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
+}
+
+function openModal(id){
+  const v = byId[id];
+  if (!v) return;
+  modalOpenId = id;
+  const p = P_META[v.personality] || {emoji:'', color:'#888', desc:''};
+  const z = zodiac(v);
+  const nb = nextBirthdayDays(v);
+  const bdaySub = nb === 0 ? '🎉 Birthday is TODAY!' : `🎉 ${nb} day${nb===1?'':'s'} from now`;
+  const verLabel = VERSION_LABEL[v.versionAdded] || `Added in v${v.versionAdded}`;
+
+  $('#mPhoto').src = `img/photo/${v.id}.png`;
+  $('#mPhoto').alt = `${v.name} photo`;
+  const houseBox = $('#mHouseBox');
+  if (v.house){
+    const img = $('#mHouse');
+    img.style.display = '';
+    img.onerror = () => { img.style.display = 'none'; houseBox.querySelector('.cap').textContent = '🏠 House tour needs an internet connection'; };
+    img.onload = () => { img.style.display = ''; };
+    img.src = v.house;
+    houseBox.querySelector('.cap').textContent = '🏠 Inside their home';
+  } else {
+    $('#mHouse').style.display = 'none';
+    houseBox.querySelector('.cap').textContent = '🏠 House interior coming soon';
+  }
+
+  $('#mNamePlate').textContent = v.name;
+  $('#mNamePlate').style.background = v.bubbleColor;
+  $('#mNamePlate').style.color = v.nameColor;
+  $('#mCatch').textContent = `${v.catchphrase}!`;
+
+  $('#mInfo').innerHTML = [
+    infoRow('Species', `${SPECIES_EMOJI[v.species] || '🐾'} ${esc(v.species)}`),
+    infoRow('Personality', `<span class="personality-dot" style="background:${p.color}"></span>${p.emoji} ${esc(v.personality)}`, p.desc),
+    infoRow('Gender', v.gender === 'Male' ? '♂️ Male' : '♀️ Female'),
+    infoRow('Hobby', ({'Fitness':'🏋️','Music':'🎵','Nature':'🌿','Play':'🪀','Fashion':'👗','Education':'📚'}[v.hobby] || '⭐') + ' ' + esc(v.hobby || '')),
+    infoRow('Birthday', `🎂 ${fmtBirthday(v)}`, `${z.sym} ${z.name} · ${bdaySub}`),
+    infoRow('Favorite Song', `🎵 ${esc(v.favoriteSong)}`),
+    infoRow('Favorite Colors', (v.colors || []).map(colorSwatch).join(' &nbsp; ') || '—'),
+    infoRow('Favorite Styles', (v.styles || []).map(s => `✨ ${esc(s)}`).join(' &nbsp; ') || '—'),
+    infoRow('Signature Outfit', `👕 ${esc(v.defaultClothing || '—')}`, `☂️ Umbrella: ${esc(v.defaultUmbrella || '—')}`),
+    infoRow('Interior Decor', `🛋️ ${esc(v.wallpaper || '—')} · ${esc(v.flooring || '—')}`,
+      `<div class="furn-tags">${(v.furniture || []).map(f => `<span class="furn-tag">${esc(f)}</span>`).join('')}</div>`, false),
+  ].join('');
+
+  $('#mQuote').textContent = v.favoriteSaying || '';
+  $('#mVersion').textContent = verLabel;
+
+  const onIsland = state.island.includes(id);
+  const ib = $('#mIslandBtn');
+  ib.textContent = onIsland ? '👋 Move Out' : '🏝️ Invite to Island';
+  ib.className = 'btn' + (onIsland ? ' warm' : '');
+  ib.onclick = () => onIsland ? removeFromIsland(id, {viaModal:true}) : addToIsland(id);
+
+  const got = state.collected.has(id);
+  const cb = $('#mCollectBtn');
+  cb.textContent = got ? '✅ Collected — remove ✓' : '⬜ Mark as Collected';
+  cb.onclick = () => setCollected(id, !got);
+
+  $('#modalBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(){
+  modalOpenId = null;
+  $('#modalBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ================= wiring ================= */
+function switchTab(which){
+  const island = which === 'island';
+  $('#tabIsland').classList.toggle('active', island);
+  $('#tabAll').classList.toggle('active', !island);
+  $('#viewIsland').classList.toggle('active', island);
+  $('#viewAll').classList.toggle('active', !island);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+$('#tabIsland').onclick = () => switchTab('island');
+$('#tabAll').onclick = () => switchTab('all');
+$('#emptyGoAll').onclick = () => switchTab('all');
+
+// island grid clicks (cards + move-out)
+$('#islandGrid').addEventListener('click', e => {
+  const mv = e.target.closest('[data-moveout]');
+  if (mv){ e.stopPropagation(); removeFromIsland(mv.dataset.moveout); return; }
+  const card = e.target.closest('.resident-card');
+  if (card) openModal(card.dataset.id);
+});
+$('#islandGrid').addEventListener('keydown', e => {
+  if (e.key === 'Enter'){ const card = e.target.closest('.resident-card'); if (card) openModal(card.dataset.id); }
+});
+
+// all-villagers grid clicks (cards + quick add)
+$('#villagerGrid').addEventListener('click', e => {
+  const qa = e.target.closest('[data-quickadd]');
+  if (qa){ e.stopPropagation(); addToIsland(qa.dataset.quickadd); return; }
+  const card = e.target.closest('.v-card');
+  if (card) openModal(card.dataset.id);
+});
+$('#villagerGrid').addEventListener('keydown', e => {
+  if (e.key === 'Enter'){ const card = e.target.closest('.v-card'); if (card) openModal(card.dataset.id); }
+});
+
+// modal close
+$('#modalClose').onclick = closeModal;
+$('#modalBackdrop').addEventListener('click', e => { if (e.target === $('#modalBackdrop')) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modalOpenId) closeModal();
+  if (e.key === '/' && !modalOpenId && !/input|select|textarea/i.test(document.activeElement.tagName)){
+    e.preventDefault(); switchTab('all'); $('#searchInput').focus();
+  }
+});
+
+// island name
+$('#islandName').onclick = () => {
+  const name = prompt('What would you like to call your island?', state.islandName);
+  if (name !== null && name.trim()){
+    state.islandName = name.trim().slice(0, 24);
+    save(); $('#islandName').textContent = state.islandName;
+    toast(`🌴 Welcome to <b>${esc(state.islandName)}</b>!`);
+  }
+};
+
+// filters
+let searchTimer;
+$('#searchInput').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => { filters.q = e.target.value.trim(); renderVillagerGrid(); }, 140);
+});
+const speciesList = [...new Set(VILLAGERS.map(v => v.species))].sort((a,b) => a.localeCompare(b));
+$('#speciesFilter').innerHTML = '<option value="all">🐼 All Species</option>' +
+  speciesList.map(s => `<option value="${esc(s)}">${SPECIES_EMOJI[s] || '🐾'} ${esc(s)}</option>`).join('');
+$('#speciesFilter').onchange = e => { filters.species = e.target.value; renderVillagerGrid(); };
+$('#personalityFilter').innerHTML = '<option value="all">😊 All Personalities</option>' +
+  Object.keys(P_META).map(p => `<option value="${esc(p)}">${P_META[p].emoji} ${esc(p)}</option>`).join('');
+$('#personalityFilter').onchange = e => { filters.personality = e.target.value; renderVillagerGrid(); };
+$('#statusFilter').onchange = e => { filters.status = e.target.value; renderVillagerGrid(); };
+$('#sortSelect').onchange = e => { filters.sort = e.target.value; renderVillagerGrid(); };
+
+// export / import
+$('#exportBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify({
+    app:'acnh-friend-tracker', exportedAt:new Date().toISOString(),
+    islandName:state.islandName, island:state.island, collected:[...state.collected]
+  }, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `acnh-tracker-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('⬇️ Backup file downloaded!');
+};
+$('#importBtn').onclick = () => $('#importFile').click();
+$('#importFile').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const j = JSON.parse(reader.result);
+      if (!Array.isArray(j.island) || !Array.isArray(j.collected)) throw new Error('bad file');
+      state.island = j.island.filter(id => byId[id]).slice(0, MAX_ISLAND);
+      state.collected = new Set(j.collected.filter(id => byId[id]));
+      if (typeof j.islandName === 'string' && j.islandName.trim()) state.islandName = j.islandName.trim().slice(0,24);
+      save();
+      $('#islandName').textContent = state.islandName;
+      renderAll();
+      toast(`⬆️ Imported! Island ${state.island.length}/10 · Collection ${state.collected.size}/${VILLAGERS.length}`);
+    }catch(err){ toast('😕 That file doesn\'t look like a tracker backup.'); }
+  };
+  reader.readAsText(f);
+  e.target.value = '';
+});
+
+/* ================= init ================= */
+$('#islandName').textContent = state.islandName;
+renderAll();
+
+/* install as a home-screen app with offline support (needs http/https hosting) */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost','127.0.0.1'].includes(location.hostname))){
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>

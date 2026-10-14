@@ -1,0 +1,15 @@
+{
+  "name": "Island Friends · ACNH Villager Tracker",
+  "short_name": "Island Friends",
+  "description": "Track your Animal Crossing: New Horizons island villagers and collection.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#c9f0dd",
+  "theme_color": "#58b368",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
