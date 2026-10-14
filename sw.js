@@ -1,6 +1,6 @@
 // Island Friends service worker: caches the app + villager images for offline use.
-const CACHE = 'acnh-tracker-v2';
-const CORE = ['./', './index.html', './data.js', './manifest.webmanifest'];
+const CACHE = 'acnh-tracker-v3';
+const CORE = ['./', './index.html', './data.js', './museum-data.js', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
   e.waitUntil(

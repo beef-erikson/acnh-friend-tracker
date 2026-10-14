@@ -228,6 +228,51 @@
     font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit; box-shadow:var(--shadow); transition:all .15s;}
   .foot-btn:hover{border-color:var(--leaf); color:var(--leaf-deep); transform:translateY(-2px);}
 
+  /* ---------- museum ---------- */
+  .blathers-banner{display:flex; align-items:center; gap:16px; background:linear-gradient(120deg,#f6ecd7,#efdfc0);
+    border:3px solid #d9c08a; border-radius:var(--radius); padding:16px 22px; margin-bottom:16px; box-shadow:var(--shadow);}
+  .blathers-banner .owl{font-size:46px; filter:drop-shadow(0 3px 4px rgba(120,90,40,.3)); animation:bob 4.5s ease-in-out infinite;}
+  .blathers-banner b{font-family:'Baloo 2',sans-serif; font-size:19px; color:#7a5b22;}
+  .blathers-banner .bb-text{color:#8a6d33; font-weight:700; font-size:14px; line-height:1.45;}
+  .museum-topbar{display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:20px;}
+  .hemi-toggle{display:flex; background:var(--paper); border-radius:999px; padding:4px; box-shadow:var(--shadow); border:2.5px solid rgba(88,179,104,.3);}
+  .hemi-btn{font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:700; padding:7px 18px; border-radius:999px; border:none;
+    background:transparent; color:var(--ink-soft); cursor:pointer; transition:all .15s;}
+  .hemi-btn.active{background:linear-gradient(180deg,#6cc576,#4a9e58); color:#fff; box-shadow:0 2px 8px rgba(58,143,77,.35);}
+  .museum-progress{flex:1; min-width:220px; display:flex; align-items:center; gap:12px;}
+  .wings-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:16px; margin-bottom:10px;}
+  .wing-card{background:var(--card); border-radius:var(--radius); padding:18px 16px 14px; cursor:pointer; box-shadow:var(--shadow);
+    border:3px solid transparent; transition:transform .18s ease, box-shadow .18s ease, border-color .18s; position:relative; overflow:hidden;}
+  .wing-card:hover{transform:translateY(-5px) rotate(-.5deg); box-shadow:var(--shadow-lift); border-color:var(--wc);}
+  .wing-card .wing-emoji{font-size:40px; filter:drop-shadow(0 3px 4px rgba(60,90,60,.25));}
+  .wing-card .wing-name{font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800; margin-top:4px;}
+  .wing-card .wing-sub{font-size:12.5px; font-weight:800; color:var(--ink-soft); margin:2px 0 10px;}
+  .wing-card .wing-counts{font-size:13px; font-weight:800; color:var(--ink);}
+  .wing-card .wing-counts b{color:var(--wc);}
+  .wing-bar{height:12px; background:#ece5d4; border-radius:999px; overflow:hidden; margin-top:7px; box-shadow:inset 0 2px 3px rgba(0,0,0,.08);}
+  .wing-bar div{height:100%; background:var(--wc); border-radius:999px; transition:width .5s cubic-bezier(.2,.8,.3,1);}
+  .wing-avail{position:absolute; top:12px; right:12px; background:#fff7e0; border:2px solid var(--sun); color:#b07d10;
+    font-size:11.5px; font-weight:800; border-radius:999px; padding:3px 9px;}
+  .wing-head{display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+  .month-toggle{display:flex; align-items:center; gap:7px; background:#fff; border:2.5px solid #d9e8c9; border-radius:999px;
+    padding:8px 15px; font-size:14px; font-weight:800; color:var(--ink); cursor:pointer; user-select:none;}
+  .month-toggle input{accent-color:var(--leaf); width:16px; height:16px; cursor:pointer;}
+  .m-grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr));}
+  .m-card .vprice{font-size:11.5px; font-weight:800; color:#c99a3a; margin-top:1px;}
+  .m-card.donated{border-color:var(--wc);}
+  .donated-badge{position:absolute; top:6px; right:6px; width:26px; height:26px; border-radius:50%; background:var(--wc);
+    border:2.5px solid #fff; color:#fff; font-size:13px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 6px rgba(0,0,0,.2); animation:pop .3s cubic-bezier(.2,1.6,.4,1);}
+  .now-dot{position:absolute; bottom:7px; left:7px; width:11px; height:11px; border-radius:50%; background:#4cd964;
+    border:2.5px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.25); animation:pulse 2.5s ease-in-out infinite;}
+  .m-chips{display:flex; gap:3px; flex-wrap:wrap; margin-top:3px;}
+  .m-chip{width:20px; height:20px; border-radius:6px; background:#eee7d6; color:var(--ink-faint); font-size:10.5px; font-weight:800;
+    display:flex; align-items:center; justify-content:center;}
+  .m-chip.on{background:var(--leaf); color:#fff;}
+  .m-chip.now{outline:2.5px solid var(--sun); outline-offset:1px;}
+  .fake-warning{background:#fff0f0; border:2.5px dashed #e7a0a0; color:#b05050; border-radius:14px; padding:9px 13px;
+    font-size:13px; font-weight:800; margin-bottom:10px;}
+
   @media (max-width:720px){
     .modal-body{grid-template-columns:1fr;}
     .modal-left{flex-direction:column; align-items:center;}
@@ -269,6 +314,7 @@
     <div class="stats-row">
       <div class="stat-chip" title="Villagers currently living on your island">🏝️ Island <span class="num" id="statIsland">0/10</span></div>
       <div class="stat-chip" title="Villagers you've ever collected">✅ Collection <span class="num" id="statCollected">0/413</span> <small id="statPercent">0%</small></div>
+      <div class="stat-chip" title="Items donated to your museum">🏛️ Museum <span class="num" id="statMuseum">0/316</span></div>
     </div>
     <div class="island-name-row">
       <span class="flag">🏝️</span> Welcome to <span id="islandName" title="Click to rename your island!">My Island</span>
@@ -277,6 +323,7 @@
     <nav class="tabs">
       <button class="tab-btn active" id="tabIsland">🏝️ My Island <span class="count" id="tabIslandCount">0</span></button>
       <button class="tab-btn" id="tabAll">📖 All Villagers <span class="count" id="tabAllCount">413</span></button>
+      <button class="tab-btn" id="tabMuseum">🏛️ Museum <span class="count" id="tabMuseumCount">316</span></button>
     </nav>
   </header>
 
@@ -326,6 +373,60 @@
     <div class="villager-grid" id="villagerGrid"></div>
   </section>
 
+  <!-- ============ MUSEUM VIEW ============ -->
+  <section class="view" id="viewMuseum">
+    <div class="blathers-banner">
+      <span class="owl">🦉</span>
+      <div class="bb-text"><b>Hoot hoot! Welcome to the museum!</b><br>
+        Track everything you've caught, netted, dived for, dug up, and haggled off Redd — and what still needs donating.</div>
+    </div>
+    <div class="museum-topbar">
+      <div class="hemi-toggle" role="group" aria-label="Hemisphere">
+        <button class="hemi-btn active" id="hemiNorth">🧭 Northern</button>
+        <button class="hemi-btn" id="hemiSouth">🧭 Southern</button>
+      </div>
+      <div class="museum-progress">
+        <div class="progress-track"><div class="progress-fill" id="museumFill"></div></div>
+        <div class="progress-label" id="museumProgressText"><b>0 / 316</b> donated</div>
+      </div>
+    </div>
+    <div id="wingsOverview" class="wings-grid"></div>
+    <div id="wingDetail" style="display:none;">
+      <div class="wing-head">
+        <button class="btn ghost" id="wingBack">◀ Wings</button>
+        <h2 class="section-title" id="wingTitle" style="margin:0;"></h2>
+      </div>
+      <div class="toolbar">
+        <div class="toolbar-row">
+          <label class="search-box"><span class="icon">🔍</span>
+            <input id="mSearchInput" type="text" placeholder="Search exhibits…" autocomplete="off">
+          </label>
+          <select id="mStatusFilter" aria-label="Filter by status">
+            <option value="all">🌈 All Status</option>
+            <option value="new">⬜ Not Caught</option>
+            <option value="caught">✓ Caught, Not Donated</option>
+            <option value="donated">🏛️ Donated</option>
+            <option value="missing">🔎 Still Needed (not donated)</option>
+          </select>
+          <select id="mSortFilter" aria-label="Sort exhibits">
+            <option value="default">🔢 Game Order</option>
+            <option value="name">🔤 Name A–Z</option>
+            <option value="price">🔔 Price (high → low)</option>
+            <option value="newest">🆕 Newest First</option>
+          </select>
+          <label class="month-toggle" id="mMonthWrap" title="Show only critters available in the current month (creature wings)">
+            <input type="checkbox" id="mMonthToggle"> 📅 This month
+          </label>
+        </div>
+        <div class="progress-row">
+          <div class="progress-track"><div class="progress-fill" id="wingFill" style="background:var(--wc,#58b368);"></div></div>
+          <div class="progress-label" id="wingProgressText"></div>
+        </div>
+      </div>
+      <div class="villager-grid m-grid" id="museumGrid"></div>
+    </div>
+  </section>
+
   <footer>
     <div>Unofficial fan tool · Data &amp; images from the community NH spreadsheet dataset · Not affiliated with Nintendo</div>
     <div class="foot-row">
@@ -369,7 +470,40 @@
 
 <div class="toast-zone" id="toastZone"></div>
 
+<!-- ============ MUSEUM MODAL ============ -->
+<div class="modal-backdrop" id="museumBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mmName">
+    <div class="modal-head">
+      <div class="modal-title" id="mmTitle">🏛️ Museum Exhibit</div>
+      <button class="close-btn" id="mmClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-left">
+        <img class="mphoto" id="mmImage" alt="" loading="lazy">
+        <div class="house-box" id="mmHighBox" style="display:none;">
+          <img id="mmHigh" alt="High resolution artwork" loading="lazy">
+          <div class="cap">🖼️ The real thing (high-res)</div>
+        </div>
+      </div>
+      <div class="modal-right">
+        <div class="m-name-plate" id="mmName"></div>
+        <div class="m-catch" id="mmCatch"></div>
+        <div id="mmFakeWarn" class="fake-warning" style="display:none;">⚠️ Redd sells a <b>forged version</b> of this piece — examine it carefully before buying!</div>
+        <div class="info-grid" id="mmInfo"></div>
+        <div style="margin-top:12px;" class="quote-box" id="mmQuote"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="mmCaughtBtn"></button>
+      <button class="btn" id="mmDonateBtn"></button>
+      <span class="spacer"></span>
+      <span class="version-tag" id="mmVersion"></span>
+    </div>
+  </div>
+</div>
+
 <script src="data.js"></script>
+<script src="museum-data.js"></script>
 <script>
 /* ================= constants & metadata ================= */
 const MAX_ISLAND = 10;
@@ -406,6 +540,16 @@ const VERSION_LABEL = {
   '2.0.0':'🆕 Added in the 2.0 update (2021)',
 };
 
+const WINGS = {
+  fish:    {emoji:'🐟', name:'Fish',          verb:'🎣 Caught by fishing',        folder:'fish',   color:'#2f9bd1', creature:true},
+  sea:     {emoji:'🦑', name:'Sea Creatures', verb:'🤿 Caught while diving',      folder:'sea',    color:'#17b8a6', creature:true},
+  bugs:    {emoji:'🦋', name:'Bugs',          verb:'🦤 Caught with a net',        folder:'bug',    color:'#7ab648', creature:true},
+  fossils: {emoji:'🦴', name:'Fossils',       verb:'⛏️ Dug up & assessed daily',  folder:'fossil', color:'#d9a441', creature:false},
+  art:     {emoji:'🖼️', name:'Artwork',       verb:'🚢 Redd\'s Treasure Trawler', folder:'art',    color:'#9d7bd8', creature:false},
+};
+const MUSEUM_TOTAL = Object.values(MUSEUM).reduce((s, a) => s + a.length, 0);
+const MONTH_LETTERS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+
 const ZODIAC = [
   ['Capricorn','♑',1,1,1,19],['Aquarius','♒',1,20,2,18],['Pisces','♓',2,19,3,20],
   ['Aries','♈',3,21,4,19],['Taurus','♉',4,20,5,20],['Gemini','♊',5,21,6,20],
@@ -418,21 +562,49 @@ const MONTHS = ['January','February','March','April','May','June','July','August
 /* ================= state ================= */
 const byId = Object.fromEntries(VILLAGERS.map(v => [v.id, v]));
 
+function blankMuseum(){
+  const m = {hemi:'north', caught:{}, donated:{}};
+  Object.keys(MUSEUM).forEach(cat => { m.caught[cat] = []; m.donated[cat] = []; });
+  return m;
+}
+function normalizeMuseum(raw){
+  const m = blankMuseum();
+  if (!raw || typeof raw !== 'object') return m;
+  if (raw.hemi === 'south') m.hemi = 'south';
+  Object.keys(MUSEUM).forEach(cat => {
+    const valid = new Set(MUSEUM[cat].map(x => x.i));
+    const fix = arr => Array.isArray(arr) ? arr.filter(id => valid.has(id)) : [];
+    m.caught[cat] = fix(raw.caught && raw.caught[cat]);
+    m.donated[cat] = fix(raw.donated && raw.donated[cat]);
+  });
+  return m;
+}
 function loadState(){
   try{
     const raw = JSON.parse(localStorage.getItem(LS_KEY));
     if (raw && Array.isArray(raw.island) && Array.isArray(raw.collected)){
+      const museum = normalizeMuseum(raw.museum);
+      museum.caught = Object.fromEntries(Object.entries(museum.caught).map(([k, v]) => [k, new Set(v)]));
+      museum.donated = Object.fromEntries(Object.entries(museum.donated).map(([k, v]) => [k, new Set(v)]));
       return {island: raw.island.filter(id => byId[id]), collected: new Set(raw.collected.filter(id => byId[id])),
-              islandName: typeof raw.islandName === 'string' ? raw.islandName : 'My Island'};
+              islandName: typeof raw.islandName === 'string' ? raw.islandName : 'My Island', museum};
     }
   }catch(e){}
-  return {island: [], collected: new Set(), islandName: 'My Island'};
+  const fresh = blankMuseum();
+  fresh.caught = Object.fromEntries(Object.keys(MUSEUM).map(k => [k, new Set()]));
+  fresh.donated = Object.fromEntries(Object.keys(MUSEUM).map(k => [k, new Set()]));
+  return {island: [], collected: new Set(), islandName: 'My Island', museum: fresh};
 }
 const state = loadState();
 function save(){
   try{
     localStorage.setItem(LS_KEY, JSON.stringify({
-      island: state.island, collected: [...state.collected], islandName: state.islandName
+      island: state.island, collected: [...state.collected], islandName: state.islandName,
+      museum: {
+        hemi: state.museum.hemi,
+        caught: Object.fromEntries(Object.entries(state.museum.caught).map(([k, v]) => [k, [...v]])),
+        donated: Object.fromEntries(Object.entries(state.museum.donated).map(([k, v]) => [k, [...v]])),
+      }
     }));
   }catch(e){}
 }
@@ -530,6 +702,14 @@ function renderStats(){
   $('#progressFill').style.width = pct + '%';
   $('#progressText').textContent = `${c} / ${VILLAGERS.length}`;
   $('#progressPercent').textContent = (pct < 1 && c > 0 ? pct.toFixed(1) : Math.round(pct)) + '%';
+  // museum
+  let donatedTotal = 0;
+  Object.keys(MUSEUM).forEach(cat => donatedTotal += state.museum.donated[cat].size);
+  $('#statMuseum').textContent = `${donatedTotal}/${MUSEUM_TOTAL}`;
+  $('#tabMuseumCount').textContent = MUSEUM_TOTAL;
+  const mp = donatedTotal / MUSEUM_TOTAL * 100;
+  $('#museumFill').style.width = mp + '%';
+  $('#museumProgressText').innerHTML = `<b>${donatedTotal} / ${MUSEUM_TOTAL}</b> donated · ${(mp < 1 && donatedTotal > 0 ? mp.toFixed(1) : Math.round(mp))}%`;
 }
 
 function renderBirthdayBanner(){
@@ -658,7 +838,243 @@ function renderAll(){
   renderVillagerGrid();
 }
 
-/* ================= modal ================= */
+/* ================= museum ================= */
+const mFilters = {cat:null, q:'', status:'all', sort:'default', month:false};
+let mmOpen = null; // {cat, id}
+
+function activeMonths(it){
+  return state.museum.hemi === 'north' ? it.nm : it.sm;
+}
+function availableNow(it, cat){
+  if (!WINGS[cat].creature) return null;
+  const now = new Date();
+  if (!activeMonths(it).includes(now.getMonth() + 1)) return false;
+  return it.ta.includes(now.getHours());
+}
+function monthsChipsHTML(it, hemi){
+  const arr = hemi === 'north' ? it.nm : it.sm;
+  const cur = new Date().getMonth() + 1;
+  return `<div class="m-chips">${MONTH_LETTERS.map((L, i) =>
+    `<span class="m-chip${arr.includes(i+1) ? ' on' : ''}${(i+1) === cur && hemi === state.museum.hemi ? ' now' : ''}" title="${MONTHS[i]}">${L}</span>`).join('')}</div>`;
+}
+const fmtBells = n => n.toLocaleString('en-US');
+
+function museumItemCardHTML(it, cat){
+  const w = WINGS[cat];
+  const caught = state.museum.caught[cat].has(it.i);
+  const donated = state.museum.donated[cat].has(it.i);
+  const now = availableNow(it, cat);
+  return `
+  <div class="v-card m-card ${donated ? 'donated' : caught ? 'collected' : 'uncollected'}" data-cat="${cat}" data-id="${it.i}" style="--wc:${w.color};" tabindex="0" role="button" aria-label="${esc(it.n)}${donated?', donated':''}">
+    <div class="accent" style="background:${w.color};"></div>
+    ${donated ? '<div class="donated-badge" title="Donated to the museum!">🏛️</div>'
+              : caught ? '<div class="collected-badge" title="Caught!">✓</div>' : ''}
+    ${now ? '<div class="now-dot" title="Available right now!"></div>' : ''}
+    <img class="icon" src="img/${w.folder}/${it.i}.png" alt="${esc(it.n)}" loading="lazy" width="72" height="72">
+    <div class="vname" title="${esc(it.n)}">${esc(it.n)}</div>
+    <div class="vprice">🔔 ${fmtBells(it.p)}</div>
+  </div>`;
+}
+
+function renderWingsOverview(){
+  $('#wingsOverview').innerHTML = Object.entries(WINGS).map(([cat, w]) => {
+    const total = MUSEUM[cat].length;
+    const caught = state.museum.caught[cat].size;
+    const donated = state.museum.donated[cat].size;
+    const pct = (donated / total * 100).toFixed(1);
+    let avail = '';
+    if (w.creature){
+      const n = MUSEUM[cat].filter(it => activeMonths(it).includes(new Date().getMonth() + 1)).length;
+      avail = `<div class="wing-avail">🗓️ ${n} this month</div>`;
+    }
+    return `
+    <div class="wing-card" data-cat="${cat}" style="--wc:${w.color};" tabindex="0" role="button" aria-label="${w.name} wing">
+      ${avail}
+      <div class="wing-emoji">${w.emoji}</div>
+      <div class="wing-name">${w.name}</div>
+      <div class="wing-sub">${w.verb}</div>
+      <div class="wing-counts">🏛️ <b>${donated}</b>/${total} donated · ✓ ${caught} caught</div>
+      <div class="wing-bar"><div style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function applyMuseumFilters(list, cat){
+  const q = mFilters.q.toLowerCase();
+  let out = list.filter(it => {
+    const caught = state.museum.caught[cat].has(it.i);
+    const donated = state.museum.donated[cat].has(it.i);
+    if (mFilters.status === 'new' && caught) return false;
+    if (mFilters.status === 'caught' && (!caught || donated)) return false;
+    if (mFilters.status === 'donated' && !donated) return false;
+    if (mFilters.status === 'missing' && donated) return false;
+    if (mFilters.month && WINGS[cat].creature && !activeMonths(it).includes(new Date().getMonth() + 1)) return false;
+    if (q && !it.n.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const priceK = it => it.p || 0;
+  const nameK = it => it.n;
+  switch (mFilters.sort){
+    case 'name': out.sort((a,b) => nameK(a).localeCompare(nameK(b))); break;
+    case 'price': out.sort((a,b) => priceK(b) - priceK(a)); break;
+    case 'newest': out.sort((a,b) => (b.ver ? 1 : 0) - (a.ver ? 1 : 0) || nameK(a).localeCompare(nameK(b))); break;
+    default:
+      if (cat === 'fossils') out.sort((a,b) => (a.g || '').localeCompare(b.g || '') || nameK(a).localeCompare(nameK(b)));
+  }
+  return out;
+}
+
+function renderWingGrid(){
+  if (!mFilters.cat) return;
+  const cat = mFilters.cat, w = WINGS[cat];
+  const list = applyMuseumFilters(MUSEUM[cat], cat);
+  $('#museumGrid').innerHTML = list.map(it => museumItemCardHTML(it, cat)).join('');
+  const total = MUSEUM[cat].length, donated = state.museum.donated[cat].size, caught = state.museum.caught[cat].size;
+  $('#wingTitle').innerHTML = `${w.emoji} ${w.name} <span class="showing-count" style="font-size:14px;">${w.verb}</span>`;
+  $('#wingFill').style.setProperty('--wc', w.color);
+  $('#wingFill').style.background = w.color;
+  $('#wingFill').style.width = (donated / total * 100) + '%';
+  $('#wingProgressText').innerHTML = `<b>${donated} / ${total}</b> donated · ✓ ${caught} caught · ${list.length} shown`;
+}
+
+function openWing(cat){
+  mFilters.cat = cat;
+  mFilters.q = ''; $('#mSearchInput').value = '';
+  mFilters.status = 'all'; $('#mStatusFilter').value = 'all';
+  mFilters.sort = 'default'; $('#mSortFilter').value = 'default';
+  mFilters.month = false; $('#mMonthToggle').checked = false;
+  $('#mMonthWrap').style.display = WINGS[cat].creature ? '' : 'none';
+  $('#wingsOverview').style.display = 'none';
+  $('#wingDetail').style.display = '';
+  renderWingGrid();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function closeWing(){
+  mFilters.cat = null;
+  $('#wingDetail').style.display = 'none';
+  $('#wingsOverview').style.display = '';
+  renderWingsOverview();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function renderMuseum(){
+  renderWingsOverview();
+  if (mFilters.cat) renderWingGrid();
+}
+
+/* -------- museum actions -------- */
+function toggleCaught(cat, id){
+  const it = MUSEUM[cat].find(x => x.i === id);
+  const s = state.museum;
+  if (s.caught[cat].has(id)){
+    s.caught[cat].delete(id); s.donated[cat].delete(id);
+    toast(`⬜ <b>${esc(it.n)}</b> marked as not caught.`);
+  } else {
+    s.caught[cat].add(id);
+    toast(`✓ <b>${esc(it.n)}</b> caught! ${s.donated[cat].has(id) ? '' : '(still needs donating 🏛️)'}`);
+  }
+  save(); renderStats(); renderMuseum();
+  if (mmOpen && mmOpen.id === id && mmOpen.cat === cat) fillMuseumModal(cat, id);
+}
+function toggleDonated(cat, id){
+  const it = MUSEUM[cat].find(x => x.i === id);
+  const s = state.museum;
+  if (s.donated[cat].has(id)){
+    s.donated[cat].delete(id); s.caught[cat].add(id);
+    toast(`🏛️ <b>${esc(it.n)}</b> removed from the museum (still caught ✓).`);
+  } else {
+    s.donated[cat].add(id); s.caught[cat].add(id);
+    toast(`🏛️ <b>${esc(it.n)}</b> donated! Hoot hoot! 🦉`);
+  }
+  save(); renderStats(); renderMuseum();
+  if (mmOpen && mmOpen.id === id && mmOpen.cat === cat) fillMuseumModal(cat, id);
+}
+
+/* -------- museum exhibit modal -------- */
+function mInfoRow(label, valueHTML, sub = '', wide = false){
+  if (!valueHTML) return '';
+  return `<div class="info-item${wide ? ' wide' : ''}">
+    <div class="lbl">${label}</div>
+    <div class="val">${valueHTML}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
+}
+
+function fillMuseumModal(cat, id){
+  const it = MUSEUM[cat].find(x => x.i === id);
+  if (!it) return;
+  const w = WINGS[cat];
+  mmOpen = {cat, id};
+
+  const img = $('#mmImage');
+  img.src = WINGS[cat].creature ? `img/${w.folder}/${it.f}.png` : `img/${w.folder}/${it.i}.png`;
+  img.alt = it.n;
+  img.style.background = '#fff';
+
+  const highBox = $('#mmHighBox');
+  if (cat === 'art' && it.hi){
+    const hi = $('#mmHigh');
+    hi.onerror = () => { highBox.style.display = 'none'; };
+    hi.onload = () => { highBox.style.display = ''; };
+    hi.src = it.hi;
+  } else highBox.style.display = 'none';
+
+  $('#mmName').textContent = it.n;
+  $('#mmName').style.background = w.color;
+  $('#mmName').style.color = '#fff';
+  $('#mmTitle').textContent = `${w.emoji} ${w.name} · Exhibit`;
+  const catchEl = $('#mmCatch');
+  catchEl.textContent = WINGS[cat].creature && it.cp ? `${it.cp}` : (cat === 'art' && it.rt ? `${it.rt}` : '');
+  catchEl.style.display = catchEl.textContent ? '' : 'none';
+  $('#mmFakeWarn').style.display = (cat === 'art' && it.fk) ? '' : 'none';
+
+  let rows = [];
+  if (w.creature){
+    rows.push(mInfoRow('Price', `🔔 ${fmtBells(it.p)} Bells`));
+    rows.push(mInfoRow('Location', `📍 ${esc(it.w || '—')}`, it.wx ? `☁️ ${esc(it.wx)}` : ''));
+    rows.push(mInfoRow('Active Hours', `🕐 ${esc(it.t)}`));
+    rows.push(mInfoRow('Months · Northern', monthsChipsHTML(it, 'north')));
+    rows.push(mInfoRow('Months · Southern', monthsChipsHTML(it, 'south')));
+    if (it.sd) rows.push(mInfoRow('Shadow Size', `🎣 ${esc(it.sd)}`));
+    if (it.mv) rows.push(mInfoRow('Movement', `🤿 ${esc(it.mv)}`));
+    if (it.d) rows.push(mInfoRow('Catch Difficulty', `⭐ ${esc(it.d)}`));
+    if (it.u) rows.push(mInfoRow('Unlocked By', `🔓 After catching ${fmtBells(it.u)} total ${cat === 'fish' ? 'fish' : cat === 'sea' ? 'sea creatures' : 'bugs'}`));
+  } else if (cat === 'fossils'){
+    rows.push(mInfoRow('Price', `🔔 ${fmtBells(it.p)} Bells`));
+    rows.push(mInfoRow('Part Of', `🦴 The ${esc(it.g)} set`));
+    rows.push(mInfoRow('Found By', '⛏️ Dig up cracks daily & ask Blathers to assess'));
+  } else {
+    rows.push(mInfoRow('Redd Price', `🏷️ ${fmtBells(it.b)} Bells`));
+    rows.push(mInfoRow('Sells For', `🔔 ${fmtBells(it.p)} Bells`));
+    if (it.rt) rows.push(mInfoRow('Real Work', `🖼️ ${esc(it.rt)}`));
+    if (it.ar) rows.push(mInfoRow('Artist', `🖌️ ${esc(it.ar)}`));
+    rows.push(mInfoRow('Found At', '🚢 Jolly Redd\'s Treasure Trawler'));
+  }
+  $('#mmInfo').innerHTML = rows.join('');
+  $('#mmQuote').innerHTML = it.de ? `🦉 <i>${esc(it.de)}</i>` : '';
+
+  $('#mmVersion').textContent = it.ver ? `🆕 Added in v${it.ver}` : '🌿 Original release';
+
+  const caught = state.museum.caught[cat].has(id);
+  const donated = state.museum.donated[cat].has(id);
+  const cBtn = $('#mmCaughtBtn');
+  cBtn.textContent = caught ? '✓ Caught — undo' : '⬜ Mark Caught';
+  cBtn.onclick = () => toggleCaught(cat, id);
+  const dBtn = $('#mmDonateBtn');
+  dBtn.textContent = donated ? '🏛️ Donated — undo' : '🏛️ Donate to Museum';
+  dBtn.style.background = donated ? '' : `linear-gradient(180deg, ${w.color}, ${w.color}cc)`;
+  dBtn.style.borderColor = w.color;
+  dBtn.onclick = () => toggleDonated(cat, id);
+}
+function openMuseumModal(cat, id){
+  fillMuseumModal(cat, id);
+  $('#museumBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMuseumModal(){
+  mmOpen = null;
+  $('#museumBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ================= villager modal ================= */
 let modalOpenId = null;
 
 function infoRow(label, valueHTML, sub = '', wide = false){
@@ -737,17 +1153,60 @@ function closeModal(){
 
 /* ================= wiring ================= */
 function switchTab(which){
-  const island = which === 'island';
-  $('#tabIsland').classList.toggle('active', island);
-  $('#tabAll').classList.toggle('active', !island);
-  $('#viewIsland').classList.toggle('active', island);
-  $('#viewAll').classList.toggle('active', !island);
+  const on = {island: which === 'island', all: which === 'all', museum: which === 'museum'};
+  $('#tabIsland').classList.toggle('active', on.island);
+  $('#tabAll').classList.toggle('active', on.all);
+  $('#tabMuseum').classList.toggle('active', on.museum);
+  $('#viewIsland').classList.toggle('active', on.island);
+  $('#viewAll').classList.toggle('active', on.all);
+  $('#viewMuseum').classList.toggle('active', on.museum);
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
 $('#tabIsland').onclick = () => switchTab('island');
 $('#tabAll').onclick = () => switchTab('all');
+$('#tabMuseum').onclick = () => switchTab('museum');
 $('#emptyGoAll').onclick = () => switchTab('all');
+
+// museum: wings overview & detail
+$('#wingsOverview').addEventListener('click', e => {
+  const card = e.target.closest('.wing-card');
+  if (card) openWing(card.dataset.cat);
+});
+$('#wingsOverview').addEventListener('keydown', e => {
+  if (e.key === 'Enter'){ const card = e.target.closest('.wing-card'); if (card) openWing(card.dataset.cat); }
+});
+$('#wingBack').onclick = closeWing;
+
+$('#museumGrid').addEventListener('click', e => {
+  const card = e.target.closest('.m-card');
+  if (card) openMuseumModal(card.dataset.cat, card.dataset.id);
+});
+$('#museumGrid').addEventListener('keydown', e => {
+  if (e.key === 'Enter'){ const card = e.target.closest('.m-card'); if (card) openMuseumModal(card.dataset.cat, card.dataset.id); }
+});
+
+let mSearchTimer;
+$('#mSearchInput').addEventListener('input', e => {
+  clearTimeout(mSearchTimer);
+  mSearchTimer = setTimeout(() => { mFilters.q = e.target.value.trim(); renderWingGrid(); }, 140);
+});
+$('#mStatusFilter').onchange = e => { mFilters.status = e.target.value; renderWingGrid(); };
+$('#mSortFilter').onchange = e => { mFilters.sort = e.target.value; renderWingGrid(); };
+$('#mMonthToggle').onchange = e => { mFilters.month = e.target.checked; renderWingGrid(); };
+
+function setHemi(hemi){
+  state.museum.hemi = hemi;
+  $('#hemiNorth').classList.toggle('active', hemi === 'north');
+  $('#hemiSouth').classList.toggle('active', hemi === 'south');
+  save(); renderMuseum();
+}
+$('#hemiNorth').onclick = () => setHemi('north');
+$('#hemiSouth').onclick = () => setHemi('south');
+
+// museum modal close
+$('#mmClose').onclick = closeMuseumModal;
+$('#museumBackdrop').addEventListener('click', e => { if (e.target === $('#museumBackdrop')) closeMuseumModal(); });
 
 // island grid clicks (cards + move-out)
 $('#islandGrid').addEventListener('click', e => {
@@ -775,8 +1234,11 @@ $('#villagerGrid').addEventListener('keydown', e => {
 $('#modalClose').onclick = closeModal;
 $('#modalBackdrop').addEventListener('click', e => { if (e.target === $('#modalBackdrop')) closeModal(); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && modalOpenId) closeModal();
-  if (e.key === '/' && !modalOpenId && !/input|select|textarea/i.test(document.activeElement.tagName)){
+  if (e.key === 'Escape'){
+    if (mmOpen) closeMuseumModal();
+    else if (modalOpenId) closeModal();
+  }
+  if (e.key === '/' && !modalOpenId && !mmOpen && !/input|select|textarea/i.test(document.activeElement.tagName)){
     e.preventDefault(); switchTab('all'); $('#searchInput').focus();
   }
 });
@@ -811,7 +1273,12 @@ $('#sortSelect').onchange = e => { filters.sort = e.target.value; renderVillager
 $('#exportBtn').onclick = () => {
   const blob = new Blob([JSON.stringify({
     app:'acnh-friend-tracker', exportedAt:new Date().toISOString(),
-    islandName:state.islandName, island:state.island, collected:[...state.collected]
+    islandName:state.islandName, island:state.island, collected:[...state.collected],
+    museum: {
+      hemi: state.museum.hemi,
+      caught: Object.fromEntries(Object.entries(state.museum.caught).map(([k, v]) => [k, [...v]])),
+      donated: Object.fromEntries(Object.entries(state.museum.donated).map(([k, v]) => [k, [...v]])),
+    }
   }, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -830,10 +1297,18 @@ $('#importFile').addEventListener('change', e => {
       state.island = j.island.filter(id => byId[id]).slice(0, MAX_ISLAND);
       state.collected = new Set(j.collected.filter(id => byId[id]));
       if (typeof j.islandName === 'string' && j.islandName.trim()) state.islandName = j.islandName.trim().slice(0,24);
+      if (j.museum){
+        const m = normalizeMuseum(j.museum);
+        state.museum.hemi = m.hemi;
+        state.museum.caught = Object.fromEntries(Object.entries(m.caught).map(([k, v]) => [k, new Set(v)]));
+        state.museum.donated = Object.fromEntries(Object.entries(m.donated).map(([k, v]) => [k, new Set(v)]));
+        setHemi(state.museum.hemi);
+      }
       save();
       $('#islandName').textContent = state.islandName;
-      renderAll();
-      toast(`⬆️ Imported! Island ${state.island.length}/10 · Collection ${state.collected.size}/${VILLAGERS.length}`);
+      renderAll(); renderMuseum();
+      let md = 0; Object.keys(MUSEUM).forEach(cat => md += state.museum.donated[cat].size);
+      toast(`⬆️ Imported! Island ${state.island.length}/10 · Villagers ${state.collected.size}/413 · Museum ${md}/${MUSEUM_TOTAL}`);
     }catch(err){ toast('😕 That file doesn\'t look like a tracker backup.'); }
   };
   reader.readAsText(f);
@@ -842,7 +1317,9 @@ $('#importFile').addEventListener('change', e => {
 
 /* ================= init ================= */
 $('#islandName').textContent = state.islandName;
+setHemi(state.museum.hemi);
 renderAll();
+renderMuseum();
 
 /* install as a home-screen app with offline support (needs http/https hosting) */
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost','127.0.0.1'].includes(location.hostname))){

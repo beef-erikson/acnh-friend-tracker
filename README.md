@@ -25,6 +25,7 @@ Double-click `index.html` (any modern browser — Chrome, Safari, Edge, Firefox)
 
 - **🏝️ My Island** — track the villagers currently living on your island (up to 10, just like the game). Click a resident's card for their full profile, or "👋 Move out" when they leave. Residents you move out stay in your collection.
 - **📖 All Villagers** — all 413 villagers with a green ✓ badge on the ones you've acquired (unacquired villagers appear faded). Search by name, catchphrase, hobby… filter by species, personality, or collection status, and sort five ways.
+- **🏛️ Museum** — the complete collectibles checklist, split into five wings: 🐟 **Fish** (80), 🦑 **Sea Creatures** (40), 🦋 **Bugs** (80), 🦴 **Fossils** (73), and 🖼️ **Artwork** (43) — 316 exhibits in all. Mark each item *caught* ✓ and *donated* 🏛️, track per-wing and overall progress, switch Northern/Southern hemisphere (months update instantly), and use the "This month" filter to see what's catchable right now. Every exhibit card shows price, location, active hours, month calendars, shadow size / movement, catch difficulty, Blathers' description — and art pieces warn you when Redd sells a forgery.
 - **🪧 Villager cards** — every villager's species, personality, gender, hobby, birthday (+ zodiac sign and a countdown!), catchphrase, favorite song, favorite colors & styles, signature outfit, favorite saying, their house interior, and when they were added to the game.
 - Click your island name in the header to rename it. A 🎂 banner appears when a resident's birthday is coming up.
 
